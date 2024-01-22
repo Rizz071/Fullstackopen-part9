@@ -1,0 +1,23 @@
+{
+  "name": "bmicalculator",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rizz071/Fullstackopen-part9.git"
+  },
+  "author": "Igor Burykin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rizz071/Fullstackopen-part9/issues"
+  },
+  "homepage": "https://github.com/Rizz071/Fullstackopen-part9#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
