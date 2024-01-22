@@ -55,4 +55,41 @@ const calculateExercises = (arr: number[], target: number): Result => {
     }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+// console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+
+
+console.log('Parsing command line...')
+
+try {
+    [...process.argv.slice(3)].forEach(elem => {
+        console.log(Number(elem))
+
+        if (isNaN(Number(elem))) {
+            throw new Error('At least one is not a number!')
+        }
+
+        const target: number = Number(process.argv[3])
+        console.log('\nTarget: ', target)
+
+        const overall_days_amount = Number(process.argv.slice(4).length)
+        console.log('\nOverall days amount: ', overall_days_amount)
+
+        const days_array: number[] = []
+        for (let i = 4; i < 4 + overall_days_amount; i++) {
+            days_array.push(Number(process.argv[i]))
+        }
+        console.log('\nDays overall: ', days_array)
+
+
+        console.log('\n\nResult object: ', calculateExercises(days_array, target))
+    })
+}
+catch (error: unknown) {
+    if (error instanceof Error) {
+        console.log('Eror occured! ', error)
+    }
+}
+
+
+
+

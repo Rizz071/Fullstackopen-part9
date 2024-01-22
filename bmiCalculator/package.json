@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bmi": "ts-node bmiCalculator.ts",
-    "calc": "ts-node exerciseCalculator.ts",
+    "bmi": "ts-node bmiCalculator.ts --  a 91",
+    "calc": "ts-node exerciseCalculator.ts -- a 1 0 2 4.5 0 3 1 0 4",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
