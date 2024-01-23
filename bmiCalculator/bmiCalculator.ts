@@ -1,6 +1,6 @@
 
 
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
     const BMI: number = weight / ((height * 0.01) ** 2)
 
     switch (true) {
@@ -21,6 +21,7 @@ const calculateBmi = (height: number, weight: number): string => {
         case BMI >= 40:
             return 'Obese (Class III)'
     }
+    return 'Error occured!'
 }
 
 let height: number

@@ -25,22 +25,33 @@ const calculateExercises = (arr: number[], target: number): Result => {
     switch (true) {
         case average === 0:
             rating = 0
+            break
         case average < target:
             rating = 1
+            break
         case average > target:
             rating = 2
+            break
+        default:
+            rating = 0
     }
 
     let ratingDescription: string
     switch (rating) {
         case 0:
             ratingDescription = 'too bad'
+            break
 
         case 1:
             ratingDescription = 'not too bad'
+            break
 
         case 2:
             ratingDescription = 'very good'
+            break
+        default:
+            ratingDescription = 'error occured!'
+            break
     }
 
     return {

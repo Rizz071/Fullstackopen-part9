@@ -6,7 +6,9 @@
   "scripts": {
     "bmi": "ts-node bmiCalculator.ts --  a 91",
     "calc": "ts-node exerciseCalculator.ts -- a 1 0 2 4.5 0 3 1 0 4",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index.ts",
+    "dev": "ts-node-dev index.ts"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,12 @@
   },
   "homepage": "https://github.com/Rizz071/Fullstackopen-part9#readme",
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
   }
 }
