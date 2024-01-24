@@ -1,4 +1,4 @@
-import { Patients, Diagnoses, patientsWithoutSSN } from '../types/types';
+import { Patients, Diagnoses, patientsWithoutSSN, Gender } from '../types/types';
 import diagnosesData from '../../data/diagnoses';
 import patientsData from '../../data/patients';
 
@@ -48,7 +48,7 @@ const addPatient = (receivedPatient: unknown): Patients => {
             name: parseString(receivedPatient.name),
             dateOfBirth: parseString(receivedPatient.dateOfBirth),
             ssn: parseString(receivedPatient.ssn),
-            gender: parseString(receivedPatient.gender),
+            gender: parseGender(receivedPatient.gender),
             occupation: parseString(receivedPatient.occupation)
         };
 
@@ -68,6 +68,11 @@ const isString = (testObject: unknown): testObject is string => {
     return typeof testObject === 'string' || testObject instanceof String;
 };
 
+//Testing for gender type (enum)
+const isGender = (testGender: string): testGender is Gender => {
+    return Object.values(Gender).map(g => g.toString()).includes(testGender);
+}
+
 //Parsing incoming field
 const parseString = (testObject: unknown): string => {
     if (!testObject || !isString(testObject)) {
@@ -77,6 +82,17 @@ const parseString = (testObject: unknown): string => {
     return testObject;
 };
 
+//Parsing gender field
+const parseGender = (receivedGender: unknown): Gender => {
+
+
+    if (!Gender || !isString(receivedGender) || !isGender(receivedGender)) {
+        throw new Error('Error in gender field description!')
+    }
+
+    const newGender: Gender = receivedGender;
+    return newGender;
+}
 
 export default {
     getAllDiagnoses, getAllPatients, addPatient
