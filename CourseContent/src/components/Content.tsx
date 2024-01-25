@@ -1,19 +1,11 @@
-import { CoursePart } from "../App";
+import { CoursePart } from "../types";
+import Part from "./Part";
 
 const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
-  return (
-    <>
-      <p>
-        {courseParts[0].name} {courseParts[0].exerciseCount}
-      </p>
-      <p>
-        {courseParts[1].name} {courseParts[1].exerciseCount}
-      </p>
-      <p>
-        {courseParts[2].name} {courseParts[2].exerciseCount}
-      </p>
-    </>
-  );
+  //   return <Part coursePart={courseParts[0]} />;
+  return courseParts.map((coursePart) => {
+    return <Part key={coursePart.name} coursePart={coursePart} />;
+  });
 };
 
 export default Content;
