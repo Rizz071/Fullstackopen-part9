@@ -23,6 +23,8 @@ const DiaryEntriesList = ({ entries }: { entries: DiaryEntry[] }) => {
                   Visibility: {entry.visibility}
                   <br />
                   Weather: {entry.weather}
+                  <br />
+                  <i>{entry.comment && entry.comment}</i>
                 </div>
               </div>
             );

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { DiaryEntry } from "./types/types";
-import AddEntryForm from "./components/addEntryForm";
+import AddEntryForm from "./components/AddEntryForm";
 
 import serviceDiary from "./services/serviceDiary";
 import DiaryEntriesList from "./components/DiaryEntriesList";

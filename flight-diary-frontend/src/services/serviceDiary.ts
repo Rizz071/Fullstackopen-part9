@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { DiaryEntry, Visibility, Weather } from "../types/types";
 
 const isNumber = (receivedId: unknown): receivedId is number => {
@@ -54,8 +54,6 @@ const parseComment = (receivedObj: unknown): string => {
 }
 
 const postEntry = async (newEntry: DiaryEntry, entries: DiaryEntry[], setEntries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>, setMessage: React.Dispatch<React.SetStateAction<string>>) => {
-
-
     try {
         const result = await axios.post<DiaryEntry>('http://127.0.0.1:3000/api/diaries', newEntry);
         console.log('Posted to server: ', result);
@@ -72,6 +70,7 @@ const postEntry = async (newEntry: DiaryEntry, entries: DiaryEntry[], setEntries
         } else {
             console.error(error);
         }
+        return error;
     }
 }
 
