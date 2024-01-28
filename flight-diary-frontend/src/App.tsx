@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { DiaryEntry } from "./types/types";
+import AddEntryForm from "./components/addEntryForm";
 
 import serviceDiary from "./services/serviceDiary";
+import DiaryEntriesList from "./components/DiaryEntriesList";
 
 function App() {
-  const [entries, setEntries] = useState<DiaryEntry[]>();
+  const [entries, setEntries] = useState<DiaryEntry[]>([]);
 
   useEffect(() => {
     axios
@@ -37,23 +39,10 @@ function App() {
   }, []);
 
   return (
-    <div style={{ margin: "20px" }}>
-      <h2>Diary Entries</h2>
-      {entries &&
-        entries.map((entry: DiaryEntry) => {
-          return (
-            <div key={entry.id} style={{ marginBottom: "20px" }}>
-              <div>
-                <strong>{entry.date}</strong>
-                <br />
-                Visibility: {entry.visibility}
-                <br />
-                Weather: {entry.weather}
-              </div>
-            </div>
-          );
-        })}
-    </div>
+    <>
+      <AddEntryForm entries={entries} setEntries={setEntries} />
+      {entries && <DiaryEntriesList entries={entries} />}
+    </>
   );
 }
 

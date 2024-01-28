@@ -1,4 +1,5 @@
-import { Visibility, Weather } from "../types/types";
+import axios, { Axios } from "axios";
+import { DiaryEntry, Visibility, Weather } from "../types/types";
 
 const isNumber = (receivedId: unknown): receivedId is number => {
     return typeof receivedId === 'number' || receivedId instanceof Number;
@@ -52,11 +53,19 @@ const parseComment = (receivedObj: unknown): string => {
     return receivedObj;
 }
 
+const postEntry = async (newEntry: DiaryEntry, entries: DiaryEntry[], setEntries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>) => {
+    const result = await axios.post<DiaryEntry>('http://127.0.0.1:3000/api/diaries', newEntry);
+    console.log('Posted to server: ', result);
 
+    addEntryToState(newEntry, entries, setEntries)
+    return result;
+}
 
-
+const addEntryToState = (newEntry: DiaryEntry, entries: DiaryEntry[], setEntries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>) => {
+    setEntries(entries.concat(newEntry));
+}
 
 
 export default {
-    parseId, parseDate, parseWeather, parseVisibility, parseComment
+    parseId, parseDate, parseWeather, parseVisibility, parseComment, postEntry
 }
