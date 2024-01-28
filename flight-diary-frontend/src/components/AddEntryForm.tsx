@@ -5,9 +5,11 @@ import { DiaryEntry } from "../types/types";
 const AddEntryForm = ({
   entries,
   setEntries,
+  setMessage,
 }: {
   entries: DiaryEntry[];
   setEntries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [date, setDate] = useState<string>("12-12-2025");
   const [visibility, setVisibility] = useState<string>("ok");
@@ -17,19 +19,34 @@ const AddEntryForm = ({
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    const newEntry: DiaryEntry = {
+    // const newEntry: DiaryEntry = {
+    //   id: Math.round(Math.random() * 100000),
+    //   date,
+    //   weather: serviceDiary.parseWeather(weather),
+    //   visibility: serviceDiary.parseVisibility(visibility),
+    //   comment: serviceDiary.parseComment(comment),
+    // };
+
+    const newEntry = {
       id: Math.round(Math.random() * 100000),
       date,
-      weather: serviceDiary.parseWeather(weather),
-      visibility: serviceDiary.parseVisibility(visibility),
-      comment: serviceDiary.parseComment(comment),
+      weather,
+      visibility,
+      comment,
     };
 
     try {
-      const response = serviceDiary.postEntry(newEntry, entries, setEntries);
+      const response = serviceDiary.postEntry(
+        newEntry as DiaryEntry,
+        entries,
+        setEntries,
+        setMessage
+      );
     } catch (error) {
-      if (error instanceof Error)
+      if (error instanceof Error) {
+        setMessage("Error: " + error.message);
         console.log("Error while sending data to server", error.message);
+      }
     }
   };
 

@@ -6,9 +6,11 @@ import AddEntryForm from "./components/addEntryForm";
 
 import serviceDiary from "./services/serviceDiary";
 import DiaryEntriesList from "./components/DiaryEntriesList";
+import Notification from "./components/Notification";
 
 function App() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     axios
@@ -40,7 +42,12 @@ function App() {
 
   return (
     <>
-      <AddEntryForm entries={entries} setEntries={setEntries} />
+      {message && <Notification message={message} setMessage={setMessage} />}
+      <AddEntryForm
+        entries={entries}
+        setEntries={setEntries}
+        setMessage={setMessage}
+      />
       {entries && <DiaryEntriesList entries={entries} />}
     </>
   );
