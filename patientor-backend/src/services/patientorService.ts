@@ -1,4 +1,4 @@
-import { Patients, Diagnoses, patientsWithoutSSN, Gender } from '../types/types';
+import { Patient, Diagnoses, patientsWithoutSSN, Gender } from '../types/types';
 import diagnosesData from '../../data/diagnoses';
 import patientsData from '../../data/patients';
 
@@ -7,26 +7,37 @@ import { v4 as uuid } from 'uuid';
 
 
 const diagnoses: Diagnoses[] = diagnosesData;
-const patients: Patients[] = patientsData;
+const patients: Patient[] = patientsData;
 
 
 const getAllPatients = (): patientsWithoutSSN[] => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation }) => {
+    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => {
         return {
             id,
             name,
             dateOfBirth,
             gender,
-            occupation
+            occupation,
+            entries
         };
     });
 };
+
+const getPatient = (id: string): Patient => {
+    const foundedPatient: Patient | undefined = patientsData.find((patient: Patient) => patient.id === id);
+
+    if (foundedPatient) {
+        return foundedPatient;
+    } else {
+        throw new Error('Patient not found in the database')
+    }
+}
 
 const getAllDiagnoses = (): Diagnoses[] => {
     return diagnoses;
 };
 
-const addPatient = (receivedPatient: unknown): Patients => {
+const addPatient = (receivedPatient: unknown): Patient => {
 
     //Generating random id
     const id = uuid();
@@ -43,17 +54,18 @@ const addPatient = (receivedPatient: unknown): Patients => {
         'gender' in receivedPatient &&
         'occupation' in receivedPatient
     ) {
-        const newPatient: Patients = {
+        const newPatient: Patient = {
             id,
             name: parseString(receivedPatient.name),
             dateOfBirth: parseString(receivedPatient.dateOfBirth),
             ssn: parseString(receivedPatient.ssn),
             gender: parseGender(receivedPatient.gender),
-            occupation: parseString(receivedPatient.occupation)
+            occupation: parseString(receivedPatient.occupation),
+            entries: []
         };
 
         //Saving right object to dummy hardcoded database
-        patients.push(newPatient);
+        patientsData.push(newPatient);
 
         //Returning saved object for sending back to frontend
         return newPatient;
@@ -95,5 +107,5 @@ const parseGender = (receivedGender: unknown): Gender => {
 }
 
 export default {
-    getAllDiagnoses, getAllPatients, addPatient
+    getAllDiagnoses, getAllPatients, addPatient, getPatient
 };

@@ -3,7 +3,7 @@ import cors from 'cors';
 
 
 import patientorService from './src/services/patientorService';
-import { Patients } from './src/types/types';
+import { Patient } from './src/types/types';
 
 const app = express();
 
@@ -20,13 +20,23 @@ app.get('/api/diagnoses', (_req, res) => {
     res.status(200).send(patientorService.getAllDiagnoses());
 });
 
+app.get('/api/patients/:id', (req, res) => {
+    try {
+        res.status(200).send(patientorService.getPatient(req.params.id));
+    }
+    catch (error: unknown) {
+        if (error instanceof Error) res.status(404).send(error.message)
+    }
+});
+
+
 app.get('/api/patients', (_req, res) => {
     res.status(200).send(patientorService.getAllPatients());
 });
 
 app.post('/api/patients', (req, res) => {
     try {
-        const newPatient: Patients = patientorService.addPatient(req.body);
+        const newPatient: Patient = patientorService.addPatient(req.body);
         res.status(201).send(newPatient);
     }
     catch (error) {
