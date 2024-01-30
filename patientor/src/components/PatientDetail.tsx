@@ -58,6 +58,18 @@ const PatientDetail = () => {
             )}
           </Typography>
         </ListItem>
+
+        {/* {patient.entries && (
+          <List>
+            {patient.entries.map((entry: Entry) => {
+              <ListItem>
+                <Typography variant="body1">
+                  <span>{entry.type}</span>
+                </Typography>
+              </ListItem>;
+            })}
+          </List>
+        )} */}
       </List>
     );
 };

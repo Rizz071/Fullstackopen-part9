@@ -1,12 +1,12 @@
-import { Patient, Diagnoses, patientsWithoutSSN, Gender } from '../types/types';
+import { Patient, Diagnosis, patientsWithoutSSN, Gender } from '../types/types';
 import diagnosesData from '../../data/diagnoses';
-import patientsData from '../../data/patients';
+import patientsData from '../../data/patients-full';
 
 import { v4 as uuid } from 'uuid';
 
 
 
-const diagnoses: Diagnoses[] = diagnosesData;
+const diagnoses: Diagnosis[] = diagnosesData;
 const patients: Patient[] = patientsData;
 
 
@@ -33,7 +33,7 @@ const getPatient = (id: string): Patient => {
     }
 }
 
-const getAllDiagnoses = (): Diagnoses[] => {
+const getAllDiagnoses = (): Diagnosis[] => {
     return diagnoses;
 };
 
