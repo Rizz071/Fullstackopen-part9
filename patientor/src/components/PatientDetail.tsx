@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Typography, List, ListItem, Container } from "@mui/material";
 import axios, { isAxiosError } from "axios";
 import { useState, useEffect } from "react";
+import EntryDetails from "./EntryDetails";
 
 const PatientDetail = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -76,16 +77,24 @@ const PatientDetail = () => {
 
         {patient.entries.length !== 0 && (
           <Container sx={{ my: 2 }}>
-            <Typography variant="h6">Entries</Typography>
             <List>
+              <ListItem disablePadding divider={true}>
+                <Typography sx={{ my: 1 }} variant="h6">
+                  Entries
+                </Typography>
+              </ListItem>
               {patient.entries.map((e: Entry) => {
                 return (
-                  <ListItem disablePadding key={e.id}>
+                  <ListItem disablePadding key={e.id} divider={true}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div>
+                      <div style={{ marginBottom: "15px" }}>
                         <Typography variant="body2">
-                          {e.date} {e.description}
+                          <strong>{e.date}</strong> {e.description}
                         </Typography>
+
+                        <div>
+                          <EntryDetails entry={e} />
+                        </div>
                       </div>
                       <div>
                         {e.diagnosisCodes && (
