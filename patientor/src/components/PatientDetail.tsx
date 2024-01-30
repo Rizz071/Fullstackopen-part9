@@ -1,4 +1,4 @@
-import { Entry, Patient } from "../types";
+import { Diagnosis, Entry, Patient } from "../types";
 import { useParams } from "react-router-dom";
 import { Typography, List, ListItem, Container } from "@mui/material";
 import axios, { isAxiosError } from "axios";
@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 
 const PatientDetail = () => {
   const [patient, setPatient] = useState<Patient>();
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
+
   const id: string | undefined = useParams().id;
 
   if (!id) {
@@ -25,7 +27,20 @@ const PatientDetail = () => {
       });
   }, [id]);
 
-  if (patient) {
+  useEffect(() => {
+    axios
+      .get<Diagnosis[]>(`http://127.0.0.1:3001/api/diagnoses`)
+      .then((response) => {
+        setDiagnoses(response.data);
+      })
+      .catch((error) => {
+        if (isAxiosError(error)) {
+          console.log(error);
+        }
+      });
+  }, []);
+
+  if (patient && diagnoses) {
     return (
       <List disablePadding>
         <ListItem disablePadding divider={true}>
@@ -82,7 +97,21 @@ const PatientDetail = () => {
                                   sx={{ display: "list-item" }}
                                   key={Math.round(Math.random() * 1000000)}
                                 >
-                                  {c}
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                    }}
+                                  >
+                                    <div style={{ width: "3.5em" }}>{c}</div>
+                                    <div>
+                                      {
+                                        diagnoses.find(
+                                          (diagnosis) => diagnosis.code === c
+                                        )?.name
+                                      }
+                                    </div>
+                                  </div>
                                 </ListItem>
                               );
                             })}
