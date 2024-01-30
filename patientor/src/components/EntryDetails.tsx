@@ -1,5 +1,5 @@
 import assertNever from "assert-never";
-import { Entry, HealthCheckRating } from "../types";
+import { Entry } from "../types";
 import { Typography } from "@mui/material";
 
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
