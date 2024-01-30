@@ -1,6 +1,6 @@
-import { Patient } from "../types";
+import { Entry, Patient } from "../types";
 import { useParams } from "react-router-dom";
-import { Typography, List, ListItem } from "@mui/material";
+import { Typography, List, ListItem, Container } from "@mui/material";
 import axios, { isAxiosError } from "axios";
 import { useState, useEffect } from "react";
 
@@ -25,9 +25,9 @@ const PatientDetail = () => {
       });
   }, [id]);
 
-  if (patient)
+  if (patient) {
     return (
-      <List disablePadding sx={{ width: "500px" }}>
+      <List disablePadding>
         <ListItem disablePadding divider={true}>
           <Typography
             variant="h3"
@@ -59,19 +59,46 @@ const PatientDetail = () => {
           </Typography>
         </ListItem>
 
-        {/* {patient.entries && (
-          <List>
-            {patient.entries.map((entry: Entry) => {
-              <ListItem>
-                <Typography variant="body1">
-                  <span>{entry.type}</span>
-                </Typography>
-              </ListItem>;
-            })}
-          </List>
-        )} */}
+        {patient.entries.length !== 0 && (
+          <Container sx={{ my: 2 }}>
+            <Typography variant="h6">Entries</Typography>
+            <List>
+              {patient.entries.map((e: Entry) => {
+                return (
+                  <ListItem disablePadding key={e.id}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div>
+                        <Typography variant="body2">
+                          {e.date} {e.description}
+                        </Typography>
+                      </div>
+                      <div>
+                        {e.diagnosisCodes && (
+                          <List sx={{ listStyleType: "disc", mx: 3 }}>
+                            {e.diagnosisCodes.map((c) => {
+                              return (
+                                <ListItem
+                                  disablePadding
+                                  sx={{ display: "list-item" }}
+                                  key={Math.round(Math.random() * 1000000)}
+                                >
+                                  {c}
+                                </ListItem>
+                              );
+                            })}
+                          </List>
+                        )}
+                      </div>
+                    </div>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Container>
+        )}
       </List>
     );
+  }
 };
 
 export default PatientDetail;

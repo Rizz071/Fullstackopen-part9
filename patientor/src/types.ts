@@ -57,6 +57,7 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
 export interface Patient {
   id: string;
   name: string;
