@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Patient, PatientFormValues } from "../types";
+
+import { Entry, EntryWithoutId, Patient, PatientFormValues } from "../types";
 
 import { apiBaseUrl } from "../constants";
 
@@ -20,7 +21,14 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
+const postEntry = async (newEntry: EntryWithoutId, patient_id: string) => {
+  const response = await axios.post<EntryWithoutId>(`http://127.0.0.1:3001/api/patients/${patient_id}/entries`, newEntry);
+  // TODO !!!! type check!
+  return response.data as Entry;
+}
+
+
 export default {
-  getAll, create
+  getAll, create, postEntry
 };
 
