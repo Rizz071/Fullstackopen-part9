@@ -50,7 +50,7 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
           diagnosisCodes,
           type: "Hospital",
           discharge: {
-            date: dischargeDate,
+            date: dischargeDate.toISOString().split("T")[0],
             criteria: dischargeCriteria,
           },
         };
