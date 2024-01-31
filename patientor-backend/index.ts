@@ -30,6 +30,18 @@ app.get('/api/patients/:id', (req, res) => {
 });
 
 
+app.post('/api/patients/:id/entries', (req, res) => {
+    try {
+        const patient_id: string = req.params.id;
+        const newEntry: unknown = req.body;
+        res.status(201).send(patientorService.postEntry(newEntry, patient_id));
+    }
+    catch (error: unknown) {
+        if (error instanceof Error) res.status(400).send(error.message)
+    }
+});
+
+
 app.get('/api/patients', (_req, res) => {
     res.status(200).send(patientorService.getAllPatients());
 });

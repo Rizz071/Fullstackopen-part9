@@ -1,8 +1,9 @@
-import { Patient, Diagnosis, patientsWithoutSSN, Gender } from '../types/types';
+import { Patient, Diagnosis, patientsWithoutSSN, Gender, Entry, SickLeave, HealthCheckRating } from '../types/types';
 import diagnosesData from '../../data/diagnoses';
 import patientsData from '../../data/patients-full';
 
 import { v4 as uuid } from 'uuid';
+
 
 
 
@@ -36,6 +37,98 @@ const getPatient = (id: string): Patient => {
 const getAllDiagnoses = (): Diagnosis[] => {
     return diagnoses;
 };
+
+const postEntry = (newEntry: unknown, patient_id: string): Entry => {
+    const patient = patients.find(patient => patient.id === patient_id)
+
+    if (!patient) throw Error('Patient not found');
+
+    if (!newEntry
+        || typeof newEntry !== 'object'
+        || !('type' in newEntry)
+        || !('description' in newEntry)
+        || !('date' in newEntry)
+        || !('specialist' in newEntry)) {
+
+        throw Error('Incorret one or more entry fields')
+    }
+
+    //Generating random id
+    const id = uuid();
+
+    switch (newEntry.type) {
+        case 'Hospital':
+
+            if (!('discharge' in newEntry)
+                || !(typeof newEntry.discharge === 'object')
+                || !newEntry.discharge
+                || !('date' in newEntry.discharge)
+                || !('criteria' in newEntry.discharge)) {
+
+                throw Error('Invalid data in Discharge fields');
+            }
+
+            const checkedHospitalEntry: Entry = {
+                type: 'Hospital',
+                id: parseString(id),
+                description: parseString(newEntry.description),
+                date: parseString(newEntry.date),
+                specialist: parseString(newEntry.specialist),
+                diagnosisCodes: parseDiagnosisCodes(newEntry),
+                discharge: {
+                    date: parseString(newEntry.discharge.date),
+                    criteria: parseString(newEntry.discharge.criteria),
+                },
+            }
+            patient.entries.push(checkedHospitalEntry);
+            return checkedHospitalEntry;
+
+        case 'OccupationalHealthcare':
+            if (!('employerName' in newEntry)) {
+                throw Error('Invalid data in employerName field');
+            }
+
+            const checkedOccupationHealthcareEntry: Entry = {
+                type: 'OccupationalHealthcare',
+                id: parseString(id),
+                description: parseString(newEntry.description),
+                date: parseString(newEntry.date),
+                specialist: parseString(newEntry.specialist),
+                diagnosisCodes: parseDiagnosisCodes(newEntry),
+                employerName: parseString(newEntry.employerName),
+                sickLeave: parseSickLeave(newEntry)
+            }
+
+            patient.entries.push(checkedOccupationHealthcareEntry);
+            return checkedOccupationHealthcareEntry;
+
+        case 'HealthCheck':
+            if (!('healthCheckRating' in newEntry)) {
+                throw Error('Invalid data in employerName field');
+            }
+
+            const checkedHealthCheckEntry: Entry = {
+                type: 'HealthCheck',
+                id: parseString(id),
+                description: parseString(newEntry.description),
+                date: parseString(newEntry.date),
+                specialist: parseString(newEntry.specialist),
+                diagnosisCodes: parseDiagnosisCodes(newEntry),
+                healthCheckRating: parseHealthCheckRating(newEntry.healthCheckRating),
+            }
+
+            patient.entries.push(checkedHealthCheckEntry);
+            return checkedHealthCheckEntry;
+
+        default:
+            return {} as Entry;
+        // return assertNever(newEntry);
+    }
+}
+
+// function assertNever(x: never): never {
+//     throw new Error("Unexpected object: " + x);
+// }
 
 const addPatient = (receivedPatient: unknown): Patient => {
 
@@ -96,8 +189,6 @@ const parseString = (testObject: unknown): string => {
 
 //Parsing gender field
 const parseGender = (receivedGender: unknown): Gender => {
-
-
     if (!Gender || !isString(receivedGender) || !isGender(receivedGender)) {
         throw new Error('Error in gender field description!')
     }
@@ -106,6 +197,41 @@ const parseGender = (receivedGender: unknown): Gender => {
     return newGender;
 }
 
+const parseSickLeave = (object: unknown): SickLeave => {
+    if (!object
+        || typeof object !== 'object'
+        || !('sickLeave' in object)
+        || typeof object.sickLeave !== 'object'
+        || !object.sickLeave
+        || !('startDate' in object.sickLeave)
+        || !('endDate' in object.sickLeave)) {
+
+        return {} as SickLeave;
+    }
+
+    return {
+        startDate: parseString(object.sickLeave.startDate),
+        endDate: parseString(object.sickLeave.endDate)
+    };
+}
+
+const parseHealthCheckRating = (object: unknown): HealthCheckRating => {
+    if (object !== 1 && object !== 2 && object !== 3 && object !== 0) {
+        throw Error('Invalid data in Health Rating');
+    }
+    return object;
+}
+
+const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
+    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+        // we will just trust the data to be in correct form
+        return [] as Array<Diagnosis['code']>;
+    }
+
+    return object.diagnosisCodes as Array<Diagnosis['code']>;
+};
+
 export default {
-    getAllDiagnoses, getAllPatients, addPatient, getPatient
+    getAllDiagnoses, getAllPatients, addPatient, getPatient,
+    parseDiagnosisCodes, postEntry
 };
