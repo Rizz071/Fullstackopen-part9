@@ -10,7 +10,6 @@ import { v4 as uuid } from 'uuid';
 const diagnoses: Diagnosis[] = diagnosesData;
 const patients: Patient[] = patientsData;
 
-
 const getAllPatients = (): patientsWithoutSSN[] => {
     return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => {
         return {
@@ -58,7 +57,6 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
 
     switch (newEntry.type) {
         case 'Hospital':
-
             if (!('discharge' in newEntry)
                 || !(typeof newEntry.discharge === 'object')
                 || !newEntry.discharge
@@ -121,14 +119,9 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
             return checkedHealthCheckEntry;
 
         default:
-            return {} as Entry;
-        // return assertNever(newEntry);
+            throw Error('Wrong Entry type');
     }
 }
-
-// function assertNever(x: never): never {
-//     throw new Error("Unexpected object: " + x);
-// }
 
 const addPatient = (receivedPatient: unknown): Patient => {
 
