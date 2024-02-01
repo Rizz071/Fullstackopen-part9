@@ -23,9 +23,8 @@ const create = async (object: PatientFormValues) => {
 
 const postEntry = async (newEntry: EntryWithoutId, patient_id: string) => {
   const response = await axios.post<EntryWithoutId>(`http://127.0.0.1:3001/api/patients/${patient_id}/entries`, newEntry);
-  // TODO !!!! type check!
   return response.data as Entry;
-}
+};
 
 
 export default {

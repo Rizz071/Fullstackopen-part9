@@ -1,11 +1,25 @@
 import { Diagnosis, Entry, EntryWithoutId, Patient } from "../types";
 import { useParams } from "react-router-dom";
-import { Typography, List, ListItem, Container, Button } from "@mui/material";
+import {
+  Typography,
+  List,
+  ListItem,
+  Container,
+  Button,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import axios, { isAxiosError } from "axios";
 import { useState, useEffect } from "react";
 import EntryDetails from "./EntryDetails";
 import AddEntryModal from "./AddEntryModal";
 import servicePatients from "../services/patients";
+import WorkSharpIcon from "@mui/icons-material/WorkSharp";
+import MaleSharpIcon from "@mui/icons-material/MaleSharp";
+import FemaleSharpIcon from "@mui/icons-material/FemaleSharp";
+import TransgenderSharpIcon from "@mui/icons-material/TransgenderSharp";
+import Grid3x3SharpIcon from "@mui/icons-material/Grid3x3Sharp";
+import CalendarMonthSharpIcon from "@mui/icons-material/CalendarMonthSharp";
 
 const PatientDetail = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -49,12 +63,6 @@ const PatientDetail = () => {
         }
       }
     }
-
-    // try {
-    //   const patient = await patientService.create(values);
-    //   setPatients(patients.concat(patient));
-    //   setModalOpen(false);
-    // } catch (e: unknown) {
   };
 
   if (!id) {
@@ -96,8 +104,8 @@ const PatientDetail = () => {
           onSubmit={submitNewEntry}
           onClose={closeModal}
         />
-        <List disablePadding>
-          <ListItem disablePadding divider={true}>
+        <List disablePadding dense={true}>
+          <ListItem disablePadding>
             <Typography
               variant="h3"
               style={{ marginBottom: "0.5em", marginTop: "0.5em" }}
@@ -105,27 +113,59 @@ const PatientDetail = () => {
               {patient.name}
             </Typography>
           </ListItem>
-          <ListItem disablePadding divider={true}>
-            <Typography variant="body1">
-              {patient.gender && <span>Gender: {patient.gender}</span>}
-            </Typography>
+          <ListItem disablePadding>
+            {patient.gender && (
+              <>
+                <ListItemIcon>
+                  {patient.gender === "male" && (
+                    <MaleSharpIcon fontSize="large" />
+                  )}
+                  {patient.gender === "female" && (
+                    <FemaleSharpIcon fontSize="large" />
+                  )}
+                  {patient.gender === "other" && (
+                    <TransgenderSharpIcon fontSize="large" />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={patient.gender} secondary="Gender" />
+              </>
+            )}
           </ListItem>
-          <ListItem disablePadding divider={true}>
-            <Typography variant="body1">
-              {patient.ssn && <span>Ssn: {patient.ssn}</span>}
-            </Typography>
+          <ListItem disablePadding>
+            {patient.ssn && (
+              <>
+                <ListItemIcon>
+                  <Grid3x3SharpIcon fontSize="large" />
+                </ListItemIcon>
+                <ListItemText primary={patient.ssn} secondary="Ssn" />
+              </>
+            )}
           </ListItem>
-          <ListItem disablePadding divider={true}>
-            <Typography variant="body1">
-              {patient.dateOfBirth && <span>Dob: {patient.dateOfBirth}</span>}
-            </Typography>
+          <ListItem disablePadding>
+            {patient.dateOfBirth && (
+              <>
+                <ListItemIcon>
+                  <CalendarMonthSharpIcon fontSize="large" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={patient.dateOfBirth}
+                  secondary="Date of birth"
+                />
+              </>
+            )}
           </ListItem>
-          <ListItem disablePadding divider={true}>
-            <Typography variant="body1">
-              {patient.occupation && (
-                <span>Occupation: {patient.occupation}</span>
-              )}
-            </Typography>
+          <ListItem disablePadding>
+            {patient.occupation && (
+              <>
+                <ListItemIcon>
+                  <WorkSharpIcon fontSize="large" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={patient.occupation}
+                  secondary="Ocupation"
+                />
+              </>
+            )}
           </ListItem>
           <Button
             sx={{ my: 2 }}
@@ -137,7 +177,7 @@ const PatientDetail = () => {
             Add entry
           </Button>
           {patient.entries.length !== 0 && (
-            <Container sx={{ my: 2 }}>
+            <Container sx={{ my: 0 }}>
               <List>
                 <ListItem disablePadding divider={true}>
                   <Typography sx={{ my: 1 }} variant="h6">
@@ -146,7 +186,12 @@ const PatientDetail = () => {
                 </ListItem>
                 {patient.entries.map((e: Entry) => {
                   return (
-                    <ListItem disablePadding key={e.id} divider={true}>
+                    <ListItem
+                      disablePadding
+                      key={e.id}
+                      divider={true}
+                      sx={{ my: 2 }}
+                    >
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <div style={{ marginBottom: "15px" }}>
                           <Typography variant="body2">
@@ -159,7 +204,13 @@ const PatientDetail = () => {
                         </div>
                         <div>
                           {e.diagnosisCodes && (
-                            <List sx={{ listStyleType: "disc", mx: 3 }}>
+                            <List
+                              sx={{
+                                listStyleType: "disc",
+                                mx: 3,
+                                marginTop: -2,
+                              }}
+                            >
                               {e.diagnosisCodes.map((c) => {
                                 return (
                                   <ListItem

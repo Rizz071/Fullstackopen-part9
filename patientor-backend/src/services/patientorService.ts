@@ -29,16 +29,16 @@ const getPatient = (id: string): Patient => {
     if (foundedPatient) {
         return foundedPatient;
     } else {
-        throw new Error('Patient not found in the database')
+        throw new Error('Patient not found in the database');
     }
-}
+};
 
 const getAllDiagnoses = (): Diagnosis[] => {
     return diagnoses;
 };
 
 const postEntry = (newEntry: unknown, patient_id: string): Entry => {
-    const patient = patients.find(patient => patient.id === patient_id)
+    const patient = patients.find(patient => patient.id === patient_id);
 
     if (!patient) throw Error('Patient not found');
 
@@ -49,7 +49,7 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
         || !('date' in newEntry)
         || !('specialist' in newEntry)) {
 
-        throw Error('Incorret one or more entry fields')
+        throw Error('Incorret one or more entry fields');
     }
 
     //Generating random id
@@ -77,7 +77,7 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
                     date: parseString(newEntry.discharge.date),
                     criteria: parseString(newEntry.discharge.criteria),
                 },
-            }
+            };
             patient.entries.push(checkedHospitalEntry);
             return checkedHospitalEntry;
 
@@ -95,7 +95,7 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
                 diagnosisCodes: parseDiagnosisCodes(newEntry),
                 employerName: parseString(newEntry.employerName),
                 sickLeave: parseSickLeave(newEntry)
-            }
+            };
 
             patient.entries.push(checkedOccupationHealthcareEntry);
             return checkedOccupationHealthcareEntry;
@@ -113,7 +113,7 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
                 specialist: parseString(newEntry.specialist),
                 diagnosisCodes: parseDiagnosisCodes(newEntry),
                 healthCheckRating: parseHealthCheckRating(newEntry.healthCheckRating),
-            }
+            };
 
             patient.entries.push(checkedHealthCheckEntry);
             return checkedHealthCheckEntry;
@@ -121,7 +121,7 @@ const postEntry = (newEntry: unknown, patient_id: string): Entry => {
         default:
             throw Error('Wrong Entry type');
     }
-}
+};
 
 const addPatient = (receivedPatient: unknown): Patient => {
 
@@ -169,7 +169,7 @@ const isString = (testObject: unknown): testObject is string => {
 //Testing for gender type (enum)
 const isGender = (testGender: string): testGender is Gender => {
     return Object.values(Gender).map(g => g.toString()).includes(testGender);
-}
+};
 
 //Parsing incoming field
 const parseString = (testObject: unknown): string => {
@@ -183,12 +183,12 @@ const parseString = (testObject: unknown): string => {
 //Parsing gender field
 const parseGender = (receivedGender: unknown): Gender => {
     if (!Gender || !isString(receivedGender) || !isGender(receivedGender)) {
-        throw new Error('Error in gender field description!')
+        throw new Error('Error in gender field description!');
     }
 
     const newGender: Gender = receivedGender;
     return newGender;
-}
+};
 
 const parseSickLeave = (object: unknown): SickLeave => {
     if (!object
@@ -206,14 +206,14 @@ const parseSickLeave = (object: unknown): SickLeave => {
         startDate: parseString(object.sickLeave.startDate),
         endDate: parseString(object.sickLeave.endDate)
     };
-}
+};
 
 const parseHealthCheckRating = (object: unknown): HealthCheckRating => {
     if (object !== 1 && object !== 2 && object !== 3 && object !== 0) {
         throw Error('Invalid data in Health Rating');
     }
     return object;
-}
+};
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
     if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {

@@ -25,7 +25,7 @@ app.get('/api/patients/:id', (req, res) => {
         res.status(200).send(patientorService.getPatient(req.params.id));
     }
     catch (error: unknown) {
-        if (error instanceof Error) res.status(404).send(error.message)
+        if (error instanceof Error) res.status(404).send(error.message);
     }
 });
 
@@ -37,7 +37,7 @@ app.post('/api/patients/:id/entries', (req, res) => {
         res.status(201).send(patientorService.postEntry(newEntry, patient_id));
     }
     catch (error: unknown) {
-        if (error instanceof Error) res.status(400).send(error.message)
+        if (error instanceof Error) res.status(400).send(error.message);
     }
 });
 

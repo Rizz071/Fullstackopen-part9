@@ -1,5 +1,5 @@
-import { useState, SyntheticEvent } from "react";
-import { EntryWithoutId, HealthCheckRating } from "../../types";
+import { useState, useEffect, SyntheticEvent } from "react";
+import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../../types";
 
 import {
   TextField,
@@ -11,6 +11,7 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
+import axios from "axios";
 
 interface Props {
   onCancel: () => void;
@@ -37,6 +38,38 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
   const [healthCheckRating, setHealthCheckRating] =
     useState<HealthCheckRating>(3);
   const [type, setType] = useState<string>("");
+
+  const [diagnosisCodesArray, setDiagnosisCodesArray] = useState<Diagnosis[]>(
+    []
+  );
+
+  useEffect(() => {
+    const getDiagnosisCodes = async () => {
+      try {
+        const { data } = await axios.get<Diagnosis[]>(
+          "http://127.0.0.1:3001/api/diagnoses"
+        );
+        setDiagnosisCodesArray(data);
+      } catch (e: unknown) {
+        if (axios.isAxiosError(e)) {
+          if (e?.response?.data && typeof e?.response?.data === "string") {
+            const message = e.response.data.replace(
+              "Something went wrong. Error: ",
+              ""
+            );
+            console.error(message);
+            // setError(message);
+          } else {
+            // setError("Unrecognized axios error");
+          }
+        } else {
+          console.error("Unknown error", e);
+          //   setError("Unknown error");
+        }
+      }
+    };
+    void getDiagnosisCodes();
+  }, []);
 
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
@@ -149,16 +182,39 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
         size="small"
         variant="standard"
       />
-      <TextField
-        required
-        label="Diagnosis codes"
-        fullWidth
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value.split(" "))}
-        sx={{ my: 0.5 }}
-        size="small"
-        variant="standard"
-      />
+
+      <FormControl required fullWidth>
+        <InputLabel sx={{ mx: -2, marginTop: 1 }}>Diagnosis codes</InputLabel>
+        <Select
+          autoWidth
+          label="Diagnosis codes"
+          value={diagnosisCodes}
+          multiple
+          onChange={({ target }) =>
+            setDiagnosisCodes(
+              typeof target.value === "string"
+                ? target.value.split(",")
+                : target.value
+            )
+          }
+          sx={{ my: 0.5 }}
+          size="small"
+          variant="standard"
+        >
+          {/* <MenuList > */}
+          {diagnosisCodesArray.map((elem) => (
+            <MenuItem sx={{ maxWidth: 300 }} key={elem.code} value={elem.code}>
+              {elem.code}
+            </MenuItem>
+          ))}
+          {/* </MenuList> */}
+        </Select>
+        {!diagnosisCodes && (
+          <FormHelperText sx={{ mx: 0, color: "red" }}>
+            Please, select diagnosis codes from list
+          </FormHelperText>
+        )}
+      </FormControl>
 
       {type === "Hospital" && (
         <div>
@@ -226,16 +282,32 @@ const AddEntryForm = ({ onCancel, onSubmit }: Props) => {
       )}
 
       {type === "Health check" && (
-        <TextField
-          required
-          label="Health check rating"
-          fullWidth
-          value={healthCheckRating}
-          // TODO Number!!!
-          onChange={({ target }) => setHealthCheckRating(Number(target.value))}
-          sx={{ my: 0.5 }}
-          size="small"
-        />
+        <FormControl required fullWidth>
+          <InputLabel sx={{ mx: -2, marginTop: 1 }}>
+            Health check rating
+          </InputLabel>
+          <Select
+            autoWidth
+            label="Health check rating"
+            value={healthCheckRating}
+            onChange={({ target }) =>
+              setHealthCheckRating(Number(target.value))
+            }
+            sx={{ my: 0.5 }}
+            size="small"
+            variant="standard"
+          >
+            {Object.keys(HealthCheckRating)
+              .filter((key) => isNaN(Number(key)))
+              .map((elem, index) => {
+                return (
+                  <MenuItem key={index} value={index}>
+                    {elem}
+                  </MenuItem>
+                );
+              })}
+          </Select>
+        </FormControl>
       )}
 
       <Grid sx={{ my: 2 }}>
